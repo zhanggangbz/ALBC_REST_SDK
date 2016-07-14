@@ -12,26 +12,58 @@ namespace ALBC_REST_SDK
 {
     public class ALBCClient
     {
-        private String _nameSpace;
-        public ALBCClient(String _nameSpaceV)
-        {
-            _nameSpace = _nameSpaceV;
-        }
-        //不计算了，我自己之前算好的一个永不失效的TOKEN，是website空间
-        //public String TOKEN_STR = ALBC_REST_SDK.ALBCUnit.Unit.GetPicTokenDefault("23247861", "4236288dc5e344610b0af3de54e6028d","website");//"UPLOAD_AK_TOP MjMyODU3OTQ6ZXlKa1pYUmxZM1JOYVcxbElqb3hMQ0psZUhCcGNtRjBhVzl1SWpvdE1Td2lhVzV6WlhKMFQyNXNlU0k2TUN3aWJtRnRaWE53WVdObElqb2lkMlZpYzJsMFpTSXNJbk5wZW1WTWFXMXBkQ0k2TUgwOjljZmQ2OTA2OTJmYWFjYTgyMWEwYTdlNjQ2Y2EyYTk4NzkwNDE4YTg";
-        public bool UpLoadFile(String _filePath)
+        string TOKEN_STR = "";
+
+        /// <summary>
+        /// 通过ak,sk,和存储空间来构造TOKEN
+        /// </summary>
+        /// <param name="_ak"></param>
+        /// <param name="_sk"></param>
+        /// <param name="_nameSpaceV"></param>
+        public ALBCClient(string _ak, string _sk, string _nameSpaceV)
         {
             UploadPolicy po = new UploadPolicy()
             {
                 expiration = "-1",
                 insertOnly = 0,
-                name = "${uuid}",
-                NameSpace = _nameSpace,
+                //name = "${uuid}",文件使用随即名
+                NameSpace = _nameSpaceV,
             };
-            String TOKEN_STR = ALBC_REST_SDK.ALBCUnit.Unit.GetPicTokenByPolicy("23247861", "4236288dc5e344610b0af3de54e6028d", ALBC_REST_SDK.ALBCUnit.Unit.BulidUploadPolicy(po));
+            TOKEN_STR = ALBC_REST_SDK.ALBCUnit.Unit.GetPicTokenByPolicy(_ak, _sk, ALBC_REST_SDK.ALBCUnit.Unit.BulidUploadPolicy(po));
+        }
 
+        /// <summary>
+        /// 通过ak,sk,和上传策略来构造TOKEN
+        /// </summary>
+        /// <param name="_ak"></param>
+        /// <param name="_sk"></param>
+        /// <param name="_po"></param>
+        public ALBCClient(string _ak, string _sk, UploadPolicy _po)
+        {
+            TOKEN_STR = ALBC_REST_SDK.ALBCUnit.Unit.GetPicTokenByPolicy(_ak, _sk, ALBC_REST_SDK.ALBCUnit.Unit.BulidUploadPolicy(_po));
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="_filePath">本地要上传的文件的路径</param>
+        /// <returns>是否上传成功</returns>
+        public bool UpLoadFile(string _filePath)
+        {
             string filename = System.IO.Path.GetFileName(_filePath);
 
+            return UpLoadFile(_filePath, filename, "");
+        }
+
+        /// <summary>
+        /// 上传文件
+        /// </summary>
+        /// <param name="_filePath">本地要上传的文件的路径</param>
+        /// <param name="_uploadFileName">上传到服务器后文件的名字（包括后缀名）</param>
+        /// <param name="_uploadPath">上传到服务器上的路径</param>
+        /// <returns></returns>
+        public bool UpLoadFile(string _filePath, string _uploadFileName, string _uploadPath)
+        {
             var client = new RestClient();
             client.BaseUrl = new Uri(Conf.UPLOAD_HOST_MEDIA);
 
@@ -39,8 +71,8 @@ namespace ALBC_REST_SDK
             request.AddHeader("Content-Type", "multipart/form-data");
             request.AddHeader("Authorization", TOKEN_STR);
 
-            request.AddParameter("dir", "qxqzxcom");
-            request.AddParameter("name", filename);
+            request.AddParameter("dir", _uploadPath);
+            request.AddParameter("name", _uploadFileName);
 
             FileStream fs1 = File.OpenRead(_filePath);
             long filesize = fs1.Length;
@@ -49,7 +81,16 @@ namespace ALBC_REST_SDK
             request.AddParameter("size", filesize);
             request.AddFile("content", _filePath, "application/octet-stream");
 
-            IRestResponse response = client.Execute(request);
+            var response = client.Execute<ResultType>(request);
+
+            if (response.ErrorException != null && response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                var twilioException = new ApplicationException(response.StatusDescription, response.ErrorException);
+                throw twilioException;
+            }
+            ResultType _rs = response.Data;
+            if (_rs.code.ToUpper() == "OK")
+                return true;
             return false;
         }
     }

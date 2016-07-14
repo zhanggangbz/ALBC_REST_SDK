@@ -37,7 +37,7 @@ namespace SDK_Test
             //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
             if (ofd.ShowDialog() == true)
             {
-                ALBC_REST_SDK.ALBCClient _client = new ALBC_REST_SDK.ALBCClient("website");
+                ALBC_REST_SDK.ALBCClient _client = new ALBC_REST_SDK.ALBCClient("", "", "");
                 _client.UpLoadFile(ofd.FileName);
             }
             else
