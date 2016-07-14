@@ -33,11 +33,11 @@ namespace SDK_Test
             //设置这个对话框的起始打开路径  
             ofd.InitialDirectory = @"D:\";
             //设置打开的文件的类型，注意过滤器的语法  
-            ofd.Filter = "PNG图片|*.png|JPG图片|*.jpg";
+            ofd.Filter = "PNG图片|*.png|JPG图片|*.jpg|BMP图片|*.bmp";
             //调用ShowDialog()方法显示该对话框，该方法的返回值代表用户是否点击了确定按钮  
             if (ofd.ShowDialog() == true)
             {
-                ALBC_REST_SDK.ALBCClient _client = new ALBC_REST_SDK.ALBCClient();
+                ALBC_REST_SDK.ALBCClient _client = new ALBC_REST_SDK.ALBCClient("website");
                 _client.UpLoadFile(ofd.FileName);
             }
             else
