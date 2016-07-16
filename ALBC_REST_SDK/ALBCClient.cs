@@ -93,5 +93,31 @@ namespace ALBC_REST_SDK
                 return true;
             return false;
         }
+
+        /// <summary>
+        /// 分片上传大文件，每片是2M
+        /// </summary>
+        /// <param name="_filePath">文件路径</param>
+        /// <returns></returns>
+        public bool UpLoadFileBlock(string _filePath)
+        {
+            string filename = System.IO.Path.GetFileName(_filePath);
+
+            return UpLoadFileBlock(_filePath, filename, "");
+        }
+
+        /// <summary>
+        /// 分片上传大文件，每次上传2M数据，由服务端自己合并
+        /// </summary>
+        /// <param name="_filePath">文件路径</param>
+        /// <param name="_uploadFileName">文件上传名称</param>
+        /// <param name="_uploadPath">文件保存路径</param>
+        /// <returns></returns>
+        public bool UpLoadFileBlock(string _filePath, string _uploadFileName, string _uploadPath)
+        {
+            BlockFile.uploadFile(_filePath, _uploadFileName, _uploadPath, TOKEN_STR);
+
+            return false;
+        }
     }
 }

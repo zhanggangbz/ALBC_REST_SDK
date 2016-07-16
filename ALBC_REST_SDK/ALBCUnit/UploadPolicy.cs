@@ -120,6 +120,6 @@ namespace ALBC_REST_SDK.ALBCUnit
         /// <summary>
         /// 上传完成之后,返回的Body信息,该参数可以包含占位符
         /// </summary>
-        public ReturnBody returnBody { get; set; }
+        public string returnBody { get; set; }
     }
 }

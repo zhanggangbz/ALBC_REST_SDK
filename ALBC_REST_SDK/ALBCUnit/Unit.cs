@@ -15,7 +15,7 @@ namespace ALBC_REST_SDK.ALBCUnit
     {
         public static string GetToken()
         {
-            return @"UPLOAD_AK_TOP MjMyNzc2NDU6ZXlKcGJuTmxjblJQYm14NUlqb2lNQ0lzSW01aGJXVnpjR0ZqWlNJNklubHBhR1VpTENKbGVIQnBjbUYwYVc5dUlqb2lMVEVpZlE6NjFlN2Y1MjYwMDZlMjM2ZGE2OGJhYzg0ZmE2ZDQ1OWI4NmUwNmQ2ZQ";
+            return @"";
         }
         /// <summary>
         /// 默认的上传策略，1小时过期时间，使用uuid作为文件名

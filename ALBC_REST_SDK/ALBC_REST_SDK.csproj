@@ -50,11 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALBCClient.cs" />
+    <Compile Include="ALBCUnit\BlockFile.cs" />
     <Compile Include="ALBCUnit\Conf.cs" />
     <Compile Include="ALBCUnit\ResultType.cs" />
-    <Compile Include="ALBCUnit\ReturnBody.cs" />
     <Compile Include="ALBCUnit\Unit.cs" />
-    <Compile Include="ALBCUnit\UploadOption.cs" />
     <Compile Include="ALBCUnit\UploadPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
