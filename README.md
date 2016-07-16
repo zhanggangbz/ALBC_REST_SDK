@@ -17,3 +17,7 @@
    _client.UpLoadFileBlock(_fileFillName);//分片上传,2M一片
    _client.UpLoadFile(_fileFillName);//分片上传
 ```
+
+##进展
+
+- **2016年7月16日** ：目前初步完成普通上传和分片上传功能
